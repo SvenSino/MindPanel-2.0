@@ -18,14 +18,11 @@ import 'primeflex/primeflex.css'
 
 const app = createApp(App)
 
-// Pinia
 const pinia = createPinia()
 app.use(pinia)
 
-// Router
 app.use(router)
 
-// PrimeVue
 app.use(PrimeVue, {
   theme: {
     preset: Aura,
@@ -39,14 +36,11 @@ app.use(PrimeVue, {
   },
 })
 
-// Services
 app.use(ToastService)
 app.use(ConfirmationService)
 
-// Directives
 app.directive('tooltip', Tooltip)
 
-// Initialize stores
 const uiStore = useUiStore()
 uiStore.initTheme()
 
