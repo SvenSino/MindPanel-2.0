@@ -1,9 +1,5 @@
 ## Sytling
-
-- Auswahl bei Wetter ist dunkel, wenn man die Stadt ändert
-- Mehr anzeigen Buttons bei Notes - ToDos auf eine Höhe
 - Mobile Optimierung
-- TODO Hinzufügen Button, Spacing
 
 ## Features
 - JWT ?
@@ -20,7 +16,6 @@
 - Nutzer können nur Kernfunktionalität benutzen
 
 ## Refactoring
-- Neues Logo
 - separate Stores für die einzelnen Widgets
 
 ## KI Unterstützung
