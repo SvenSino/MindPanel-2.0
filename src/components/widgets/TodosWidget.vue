@@ -127,10 +127,9 @@ function isOverdue(dateString: string | null): boolean {
               placeholder="Fälligkeitsdatum"
               dateFormat="dd.mm.yy"
               showIcon
-              class="flex-1"
+              class="calendar-field"
             />
             <Button
-
               icon="pi pi-plus"
               @click="addTodo"
               :disabled="!newTodoTitle.trim()"
@@ -498,5 +497,24 @@ function isOverdue(dateString: string | null): boolean {
   .add-todo-btn :deep(.p-button-label) {
     display: none;
   }
+}
+
+.add-todo-btn {
+  min-width: 2.5rem;
+  flex-shrink: 0;
+}
+
+.calendar-field {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.calendar-field :deep(.p-inputtext) {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.calendar-field :deep(.p-datepicker-trigger) {
+  flex-shrink: 0;
 }
 </style>
