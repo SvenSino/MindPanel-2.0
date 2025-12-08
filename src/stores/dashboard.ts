@@ -64,7 +64,17 @@ export const useDashboardStore = defineStore('dashboard', () => {
     try {
       const parsed = JSON.parse(raw) as Widget[]
       if (Array.isArray(parsed)) {
-        widgets.value = parsed
+        const defaultWidgets = getDefaultWidgets()
+        const mergedWidgets = [...parsed]
+
+        defaultWidgets.forEach(defaultWidget => {
+          if (!mergedWidgets.find(w => w.id === defaultWidget.id)) {
+            mergedWidgets.push(defaultWidget)
+          }
+        })
+
+        widgets.value = mergedWidgets
+        saveWidgets()
       }
     } catch (e) {
       console.warn('Konnte Widgets nicht laden:', e)
