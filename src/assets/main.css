@@ -144,23 +144,23 @@ body.app-dark {
 .widgets-grid {
   display: grid;
   gap: 1.5rem;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
 }
 
 @media (min-width: 768px) {
   .widgets-grid {
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
   }
 }
 
 @media (min-width: 1200px) {
   .widgets-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
   }
 }
 
 @media (min-width: 1600px) {
   .widgets-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   }
 }
