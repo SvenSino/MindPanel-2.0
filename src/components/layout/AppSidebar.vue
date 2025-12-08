@@ -51,12 +51,6 @@ function isActive(path: string) {
       </div>
     </div>
 
-    <div class="sidebar-footer">
-      <div class="text-center text-sm text-color-secondary p-3">
-        <p class="m-0">MindPanel v0.1.0</p>
-        <p class="m-0 mt-1">Made with ❤️</p>
-      </div>
-    </div>
   </div>
 
   <!-- Mobile Sidebar (drawer) -->
@@ -87,13 +81,6 @@ function isActive(path: string) {
         </div>
       </div>
     </div>
-
-    <template #footer>
-      <div class="text-center text-sm text-color-secondary p-3">
-        <p class="m-0">MindPanel v0.1.0</p>
-        <p class="m-0 mt-1">Made with ❤️</p>
-      </div>
-    </template>
   </Sidebar>
 </template>
 

@@ -212,9 +212,6 @@ function confirmClearData() {
 
                 <Divider />
 
-                <div class="text-center">
-                  <p class="m-0 text-color-secondary">Made with ❤️</p>
-                </div>
               </div>
             </template>
           </Card>
