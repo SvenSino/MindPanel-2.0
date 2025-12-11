@@ -55,6 +55,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
 
 
   function loadWidgets() {
+      //Prüft SSR -> Kein LocalStorage, aktuell nicht notwendig
     if (typeof window === 'undefined') return
     const raw = window.localStorage.getItem(WIDGET_LAYOUT_KEY)
     if (!raw) {
@@ -68,7 +69,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
         const mergedWidgets = [...parsed]
 
         defaultWidgets.forEach(defaultWidget => {
-          if (!mergedWidgets.find(w => w.id === defaultWidget.id)) {
+          if (!mergedWidgets.find(widget => widget.id === defaultWidget.id)) {
             mergedWidgets.push(defaultWidget)
           }
         })
@@ -93,7 +94,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   }
 
   function toggleWidget(widgetId: string) {
-    const widget = widgets.value.find(w => w.id === widgetId)
+    const widget = widgets.value.find(widget => widget.id === widgetId)
     if (widget) {
       widget.enabled = !widget.enabled
       saveWidgets()
@@ -108,7 +109,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   // Computed: enabled widgets only
   const enabledWidgets = ref<Widget[]>([])
   watch(widgets, () => {
-    enabledWidgets.value = widgets.value.filter(w => w.enabled)
+    enabledWidgets.value = widgets.value.filter(widget => widget.enabled)
   }, { deep: true, immediate: true })
 
 
@@ -121,7 +122,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
       if (Array.isArray(parsed)) {
         notes.value = parsed
         if (parsed.length > 0) {
-          noteIdCounter = Math.max(...parsed.map(n => n.id)) + 1
+          noteIdCounter = Math.max(...parsed.map(note => note.id)) + 1
         }
       }
     } catch (e) {
@@ -144,7 +145,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   }
 
   function updateNote(id: number, title: string, content: string) {
-    const note = notes.value.find(n => n.id === id)
+    const note = notes.value.find(note => note.id === id)
     if (note) {
       note.title = title
       note.content = content
@@ -152,25 +153,25 @@ export const useDashboardStore = defineStore('dashboard', () => {
   }
 
   function deleteNote(id: number) {
-    notes.value = notes.value.filter(n => n.id !== id)
+    notes.value = notes.value.filter(note => note.id !== id)
   }
 
   function archiveNote(id: number) {
-    const note = notes.value.find(n => n.id === id)
+    const note = notes.value.find(note => note.id === id)
     if (note) {
       note.archived = true
       archivedNotes.value.push({ ...note })
-      notes.value = notes.value.filter(n => n.id !== id)
+      notes.value = notes.value.filter(note => note.id !== id)
       saveArchivedNotes()
     }
   }
 
   function unarchiveNote(id: number) {
-    const note = archivedNotes.value.find(n => n.id === id)
+    const note = archivedNotes.value.find(note => note.id === id)
     if (note) {
       note.archived = false
       notes.value.push({ ...note })
-      archivedNotes.value = archivedNotes.value.filter(n => n.id !== id)
+      archivedNotes.value = archivedNotes.value.filter(note => note.id !== id)
       saveArchivedNotes()
     }
   }
@@ -204,7 +205,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
       if (Array.isArray(parsed)) {
         todos.value = parsed
         if (parsed.length > 0) {
-          todoIdCounter = Math.max(...parsed.map(t => t.id)) + 1
+          todoIdCounter = Math.max(...parsed.map(todo => todo.id)) + 1
         }
       }
     } catch (e) {
@@ -229,23 +230,23 @@ export const useDashboardStore = defineStore('dashboard', () => {
   }
 
   function updateTodo(id: number, updates: Partial<Omit<Todo, 'id' | 'createdAt'>>) {
-    const todo = todos.value.find(t => t.id === id)
+    const todo = todos.value.find(todo => todo.id === id)
     if (todo) {
       Object.assign(todo, updates)
     }
   }
 
   function toggleTodo(id: number) {
-    const todo = todos.value.find(t => t.id === id)
+    const todo = todos.value.find(todo => todo.id === id)
     if (todo) {
       todo.completed = !todo.completed
     }
   }
 
   function togglePriority(id: number): boolean {
-    const todo = todos.value.find(t => t.id === id)
+    const todo = todos.value.find(todo => todo.id === id)
     if (todo) {
-      const priorityCount = todos.value.filter(t => t.isPriority && t.id !== id).length
+      const priorityCount = todos.value.filter(todo => todo.isPriority && todo.id !== id).length
       if (!todo.isPriority && priorityCount >= 3) {
         return false
       }
@@ -256,25 +257,25 @@ export const useDashboardStore = defineStore('dashboard', () => {
   }
 
   function deleteTodo(id: number) {
-    todos.value = todos.value.filter(t => t.id !== id)
+    todos.value = todos.value.filter(todo => todo.id !== id)
   }
 
   function archiveTodo(id: number) {
-    const todo = todos.value.find(t => t.id === id)
+    const todo = todos.value.find(todo => todo.id === id)
     if (todo) {
       todo.archived = true
       archivedTodos.value.push({ ...todo })
-      todos.value = todos.value.filter(t => t.id !== id)
+      todos.value = todos.value.filter(todo => todo.id !== id)
       saveArchivedTodos()
     }
   }
 
   function unarchiveTodo(id: number) {
-    const todo = archivedTodos.value.find(t => t.id === id)
+    const todo = archivedTodos.value.find(todo => todo.id === id)
     if (todo) {
       todo.archived = false
       todos.value.push({ ...todo })
-      archivedTodos.value = archivedTodos.value.filter(t => t.id !== id)
+      archivedTodos.value = archivedTodos.value.filter(todo => todo.id !== id)
       saveArchivedTodos()
     }
   }

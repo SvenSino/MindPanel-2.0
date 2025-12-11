@@ -77,12 +77,10 @@ export const usePomodoroStore = defineStore('pomodoro', () => {
     if (currentMode.value === 'focus') {
       completedPomodoros.value++
 
-      // Statistik aktualisieren
       const today = new Date().toISOString().split('T')[0]
       dailyStats.value[today] = (dailyStats.value[today] || 0) + 1
       saveDailyStats()
 
-      // Nach 4 Fokus-Sessions eine lange Pause
       if (currentFlow.value >= 4) {
         currentMode.value = 'longBreak'
         currentFlow.value = 1
@@ -94,10 +92,9 @@ export const usePomodoroStore = defineStore('pomodoro', () => {
       currentMode.value = 'focus'
     }
 
-    // Set timeLeft to new mode duration
     timeLeft.value = totalSeconds.value
 
-    // Optional: Notification
+    //TODO
     if ('Notification' in window && Notification.permission === 'granted') {
       const body = currentMode.value === 'focus'
         ? 'Zurück zur Arbeit!'
@@ -108,7 +105,6 @@ export const usePomodoroStore = defineStore('pomodoro', () => {
       new Notification('Pomodoro Timer', { body })
     }
 
-    // Auto-start nächster Timer
     if (autoStart.value) {
       setTimeout(() => start(), 1000)
     }
@@ -117,7 +113,6 @@ export const usePomodoroStore = defineStore('pomodoro', () => {
   function switchMode(mode: TimerMode) {
     pause()
     currentMode.value = mode
-    // Directly calculate the duration for the new mode
     const duration = mode === 'focus' ? focusDuration.value : mode === 'longBreak' ? longBreakDuration.value : breakDuration.value
     timeLeft.value = duration * 60
   }
