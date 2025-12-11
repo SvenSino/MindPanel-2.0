@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Card from 'primevue/card'
-import Calendar from 'primevue/calendar'
+import DatePicker from 'primevue/datepicker'
 
 const selectedDate = ref<Date>(new Date())
 
@@ -29,7 +29,7 @@ function formatDate(date: Date): string {
     <template #content>
       <div class="widget-content">
         <div class="calendar-container">
-          <Calendar
+          <DatePicker
             v-model="selectedDate"
             inline
             class="w-full"

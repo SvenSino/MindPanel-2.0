@@ -7,7 +7,7 @@ import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import Checkbox from 'primevue/checkbox'
-import Calendar from 'primevue/calendar'
+import DatePicker from 'primevue/datepicker'
 import { useToast } from 'primevue/usetoast'
 
 const dashboardStore = useDashboardStore()
@@ -122,7 +122,7 @@ function isOverdue(dateString: string | null): boolean {
             class="w-full"
           />
           <div class="flex gap-2">
-            <Calendar
+            <DatePicker
               v-model="newTodoDueDate"
               placeholder="Fälligkeitsdatum"
               dateFormat="dd.mm.yy"
