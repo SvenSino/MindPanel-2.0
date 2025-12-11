@@ -2,12 +2,10 @@
 - Mobile Optimierung
 
 ## Features
+- Tagsystem für Notizen
 - JWT ?
 - Aktuellen Wert des Timers oben im Tab anzeigen
 - Passwort ändern
-- Profil -> Name, Adresse
-- Settings für neue Nutzer übernehmen
-- Configs für andere Nutzer
 - FlashCards -> Notizen in FlashCards umwandeln ggf. für Anki exportieren
 - Rollenkonzept -> Kalender Funktion erweitern und Events zwischen Nutzern teilen.
 - Chatfunktion
