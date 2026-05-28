@@ -2,6 +2,9 @@ package com.mindpanel.api.controller
 
 import com.mindpanel.api.model.Note
 import com.mindpanel.api.service.NoteService
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
@@ -21,14 +24,14 @@ class NoteController(private val noteService: NoteService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createNote(@AuthenticationPrincipal jwt: Jwt, @RequestBody request: NoteRequest): Note =
+    fun createNote(@AuthenticationPrincipal jwt: Jwt, @Valid @RequestBody request: NoteRequest): Note =
         noteService.createNote(jwt.subject, request.title, request.content)
 
     @PutMapping("/{noteId}")
     fun updateNote(
         @AuthenticationPrincipal jwt: Jwt,
         @PathVariable noteId: String,
-        @RequestBody request: NoteRequest
+        @Valid @RequestBody request: NoteRequest
     ): Note = noteService.updateNote(jwt.subject, noteId, request.title, request.content)
 
     @PostMapping("/{noteId}/archive")
@@ -45,4 +48,12 @@ class NoteController(private val noteService: NoteService) {
         noteService.deleteNote(jwt.subject, noteId)
 }
 
-data class NoteRequest(val title: String, val content: String)
+data class NoteRequest(
+    @field:NotBlank(message = "Titel darf nicht leer sein")
+    @field:Size(max = 255, message = "Titel darf maximal 255 Zeichen lang sein")
+    val title: String,
+
+    @field:NotBlank(message = "Inhalt darf nicht leer sein")
+    @field:Size(max = 10000, message = "Inhalt darf maximal 10.000 Zeichen lang sein")
+    val content: String
+)

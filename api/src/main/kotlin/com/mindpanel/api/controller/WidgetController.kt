@@ -3,6 +3,8 @@ package com.mindpanel.api.controller
 import com.mindpanel.api.model.Widget
 import com.mindpanel.api.model.WidgetConfig
 import com.mindpanel.api.service.WidgetService
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotEmpty
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.*
@@ -16,7 +18,7 @@ class WidgetController(private val widgetService: WidgetService) {
         widgetService.getWidgets(jwt.subject)
 
     @PutMapping
-    fun updateWidgets(@AuthenticationPrincipal jwt: Jwt, @RequestBody request: WidgetUpdateRequest): WidgetConfig =
+    fun updateWidgets(@AuthenticationPrincipal jwt: Jwt, @Valid @RequestBody request: WidgetUpdateRequest): WidgetConfig =
         widgetService.updateWidgets(jwt.subject, request.widgets)
 
     @PostMapping("/reset")
@@ -24,4 +26,7 @@ class WidgetController(private val widgetService: WidgetService) {
         widgetService.resetWidgets(jwt.subject)
 }
 
-data class WidgetUpdateRequest(val widgets: List<Widget>)
+data class WidgetUpdateRequest(
+    @field:NotEmpty(message = "Widget-Liste darf nicht leer sein")
+    val widgets: List<Widget>
+)

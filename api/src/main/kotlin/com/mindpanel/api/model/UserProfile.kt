@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class UserProfile(
     @Id val id: String = ObjectId.get().toHexString(),
     val userId: String,
+    val firstName: String = "",
+    val lastName: String = "",
     val street: String = "",
     val zipCode: String = "",
     val city: String = "",

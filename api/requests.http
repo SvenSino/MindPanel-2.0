@@ -1,0 +1,26 @@
+
+# @name adminLogin
+POST http://localhost:8180/realms/mindpanel/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&client_id=mindpanel-api&username=sven&password=admin
+
+> {% client.global.set("admin_token", response.body.access_token) %}
+
+### Admin-Endpunkt aufrufen — sollte 200 zurückgeben
+GET http://localhost:8080/api/admin/users
+Authorization: Bearer {{admin_token}}
+
+###
+
+# @name userLogin
+POST http://localhost:8180/realms/mindpanel/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&client_id=mindpanel-api&username=normalUser&password=admin
+
+> {% client.global.set("user_token", response.body.access_token) %}
+
+### Admin-Endpunkt aufrufen — sollte 403 zurückgeben
+GET http://localhost:8080/api/admin/users
+Authorization: Bearer {{user_token}}

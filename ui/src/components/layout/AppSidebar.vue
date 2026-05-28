@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Sidebar from 'primevue/sidebar'
+import { useAuthStore } from '@/stores/auth'
 
 const props = defineProps<{
   visible: boolean
@@ -13,12 +15,14 @@ const emit = defineEmits<{
 
 const router = useRouter()
 const route = useRoute()
+const authStore = useAuthStore()
 
-const menuItems = [
+const menuItems = computed(() => [
   { label: 'Dashboard', icon: 'pi pi-th-large', to: '/' },
   { label: 'Profil', icon: 'pi pi-user', to: '/profile-settings' },
   { label: 'Einstellungen', icon: 'pi pi-cog', to: '/settings' },
-]
+  ...(authStore.isAdmin ? [{ label: 'Admin', icon: 'pi pi-users', to: '/admin' }] : []),
+])
 
 function navigateTo(path: string) {
   router.push(path)

@@ -30,6 +30,8 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 }
 
 kotlin {
@@ -40,4 +42,13 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	testLogging {
+		events("passed", "failed", "skipped")
+		showStandardStreams = false
+		afterSuite(KotlinClosure2({ desc: TestDescriptor, result: TestResult ->
+			if (desc.parent == null) {
+				println("\n${result.resultType} — ${result.successfulTestCount}/${result.testCount} tests passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped")
+			}
+		}))
+	}
 }

@@ -19,6 +19,7 @@ export interface User {
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
   const isAuthenticated = computed(() => !!user.value)
+  const isAdmin = computed(() => keycloak.hasRealmRole('admin'))
 
   async function initAuth() {
     if (!keycloak.authenticated) {
@@ -80,6 +81,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     user,
     isAuthenticated,
+    isAdmin,
     initAuth,
     updateProfile,
     updateAvatar,

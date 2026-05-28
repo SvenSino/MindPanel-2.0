@@ -3,6 +3,9 @@ package com.mindpanel.api.controller
 import com.mindpanel.api.model.PomodoroSettings
 import com.mindpanel.api.model.PomodoroStat
 import com.mindpanel.api.service.PomodoroService
+import jakarta.validation.Valid
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.bind.annotation.*
@@ -17,7 +20,7 @@ class PomodoroController(private val pomodoroService: PomodoroService) {
         pomodoroService.getSettings(jwt.subject)
 
     @PutMapping("/settings")
-    fun updateSettings(@AuthenticationPrincipal jwt: Jwt, @RequestBody request: PomodoroSettingsRequest): PomodoroSettings =
+    fun updateSettings(@AuthenticationPrincipal jwt: Jwt, @Valid @RequestBody request: PomodoroSettingsRequest): PomodoroSettings =
         pomodoroService.updateSettings(
             jwt.subject,
             request.focusDuration,
@@ -42,8 +45,17 @@ class PomodoroController(private val pomodoroService: PomodoroService) {
 }
 
 data class PomodoroSettingsRequest(
+    @field:Min(1, message = "Fokus-Dauer muss mindestens 1 Minute sein")
+    @field:Max(120, message = "Fokus-Dauer darf maximal 120 Minuten sein")
     val focusDuration: Int,
+
+    @field:Min(1, message = "Pause muss mindestens 1 Minute sein")
+    @field:Max(60, message = "Pause darf maximal 60 Minuten sein")
     val breakDuration: Int,
+
+    @field:Min(1, message = "Lange Pause muss mindestens 1 Minute sein")
+    @field:Max(60, message = "Lange Pause darf maximal 60 Minuten sein")
     val longBreakDuration: Int,
+
     val autoStart: Boolean
 )
