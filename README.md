@@ -1,154 +1,138 @@
-# MindPanel
+# MindPanel 2.0
 
-Ein modernes, offline-fähiges Produktivitäts-Dashboard mit frei verschiebbaren Widgets.
+Ein modernes Produktivitäts-Dashboard mit frei verschiebbaren Widgets, REST-Backend und Benutzerauthentifizierung.
 
 ## Features
 
-- **Drag & Drop**: Verschiebe Widgets per Drag & Drop
-- **5 leistungsstarke Widgets**:
-  - 📋 Aufgaben-Manager mit Prioritäten
-  - 📝 Notizen mit Editor
-  - 🌤️ Wetter (Open-Meteo API)
-  - 📅 Kalender
-  - ⏱️ Pomodoro-Timer
+- **Drag & Drop**: Widgets per Drag & Drop verschieben und anordnen
+- **5 Widgets**: Aufgaben-Manager, Notizen, Wetter, Kalender, Pomodoro-Timer
 - **Dark Mode**: Elegantes dunkles Theme
-- **Offline-fähig**: Alle Daten werden lokal gespeichert
 - **Responsive**: Funktioniert auf Desktop, Tablet und Mobile
-- **Minimalistisch**: Modernes, cleanes Design mit PrimeVue
+- **Benutzerauthentifizierung**: Login via Keycloak (OAuth2 / OIDC)
+- **Persistenz**: Alle Daten werden pro Nutzer in MongoDB gespeichert
+- **Admin-Panel**: Nutzerverwaltung für Admins
 
 ## Tech Stack
 
-- **Frontend**: Vue 3 (Composition API) + TypeScript
-- **Build**: Vite
-- **UI**: PrimeVue + PrimeFlex
-- **State**: Pinia
-- **Router**: Vue Router
-- **Drag & Drop**: VueDraggable
-- **HTTP**: Axios
+| Bereich | Technologie |
+|---------|-------------|
+| Frontend | Vue 3 (Composition API) + TypeScript + Vite |
+| UI | PrimeVue + PrimeFlex |
+| State | Pinia |
+| HTTP | Axios |
+| Backend | Spring Boot 3 + Kotlin |
+| Datenbank | MongoDB |
+| Auth | Keycloak 26 (OAuth2 / OIDC) |
+| Build | Gradle |
 
-## Projekt-Setup
+## Voraussetzungen
 
-### Dependencies installieren
+- Node.js 18+
+- JDK 21+
+- Docker + Docker Compose
+
+## Installation & Start
+
+### 1. Repository klonen
 
 ```bash
-npm install
+git clone <repo-url>
+cd MindPanel-2.0
 ```
 
-### Development Server starten
+### 2. Infrastruktur starten (MongoDB + Keycloak)
 
 ```bash
+docker compose up -d
+```
+
+Startet:
+- **MongoDB** auf Port `27017`
+- **Keycloak** auf Port `8180` (Admin: `admin` / `admin`)
+
+### 3. Keycloak einrichten
+
+Keycloak nutzt eine In-Memory-Datenbank — der Realm `mindpanel` und der Client `mindpanel-api` werden beim Start automatisch importiert. Du musst nur einmalig einen Nutzer anlegen:
+
+1. `http://localhost:8180` öffnen → mit `admin` / `admin` einloggen
+2. Realm **mindpanel** auswählen
+3. **Users** → "Create new user" → Username + Vor-/Nachname + E-Mail eintragen → "Create"
+4. Tab **Credentials** → Passwort setzen → "Temporary" auf `OFF`
+
+### 4. Backend starten
+
+```bash
+cd api
+./gradlew bootRun
+```
+
+Die API läuft auf `http://localhost:8080`.  
+Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+
+### 5. Frontend starten
+
+```bash
+cd ui
+npm install
 npm run dev
 ```
 
-Die App läuft dann auf [http://localhost:5173](http://localhost:5173)
-
-### Production Build erstellen
-
-```bash
-npm run build
-```
-
-### Production Preview
-
-```bash
-npm run preview
-```
+Das Frontend läuft auf `http://localhost:5173`.
 
 ## Projektstruktur
 
 ```
-src/
-├── assets/          # CSS und statische Assets
-├── components/      # Vue Komponenten
-│   ├── layout/     # Layout-Komponenten (AppShell, Sidebar)
-│   └── widgets/    # Widget-Komponenten
-├── router/          # Vue Router Konfiguration
-├── services/        # API Services (z.B. Weather)
-├── stores/          # Pinia Stores
-├── views/           # View-Komponenten (Pages)
-├── App.vue          # Root-Komponente
-└── main.ts          # App Entry Point
+MindPanel-2.0/
+├── docker-compose.yml       # MongoDB + Keycloak
+├── keycloak/
+│   └── import/              # Realm-Konfiguration (auto-import)
+├── api/                     # Spring Boot Backend
+│   └── src/main/kotlin/
+│       └── com/mindpanel/api/
+│           ├── controller/  # REST Endpoints
+│           ├── service/     # Businesslogik
+│           ├── repository/  # MongoDB Zugriff
+│           ├── model/       # Domain-Objekte
+│           ├── security/    # OAuth2 / JWT Konfiguration
+│           └── config/      # OpenAPI / Swagger
+└── ui/                      # Vue 3 Frontend
+    └── src/
+        ├── components/      # UI-Komponenten
+        ├── views/           # Seiten
+        ├── stores/          # Pinia Stores
+        └── services/        # API + Keycloak
 ```
 
-## Widgets
+## API Endpoints
 
-### 📋 Aufgaben-Widget
+| Methode | Pfad | Beschreibung |
+|---------|------|--------------|
+| GET | `/api/todos` | Aktive Todos |
+| POST | `/api/todos` | Todo erstellen |
+| PUT | `/api/todos/{id}` | Todo aktualisieren |
+| DELETE | `/api/todos/{id}` | Todo löschen |
+| GET | `/api/notes` | Aktive Notizen |
+| POST | `/api/notes` | Notiz erstellen |
+| GET | `/api/profile` | Nutzerprofil abrufen |
+| PUT | `/api/profile` | Nutzerprofil aktualisieren |
+| GET | `/api/pomodoro/settings` | Pomodoro-Einstellungen |
+| GET | `/api/pomodoro/stats` | Statistiken |
+| GET | `/api/widgets` | Widget-Konfiguration |
+| GET | `/api/admin/users` | Alle Nutzer (nur Admin) |
 
-- Aufgaben erstellen und verwalten
-- Bis zu 3 Prioritäten markieren
-- Fälligkeitsdatum setzen
-- Aufgaben abhaken und löschen
+Vollständige Dokumentation: `http://localhost:8080/swagger-ui/index.html`
 
-### 📝 Notizen-Widget
+## Admin-Rolle
 
-- Notizen mit Titel und Inhalt erstellen
-- Notizen bearbeiten und löschen
-- Übersichtliche Darstellung
+Um einem Nutzer Admin-Rechte zu geben:
 
-### 🌤️ Wetter-Widget
+1. Keycloak öffnen → Realm `mindpanel` → **Users** → Nutzer auswählen
+2. Tab **Role mapping** → "Assign role" → Filter auf "Filter by realm roles" → `admin` zuweisen
+3. Neu einloggen
 
-- Aktuelle Wetterdaten via Open-Meteo API
-- Stadtsuche mit Geocoding
-- Temperatur und Wetterbeschreibung
-- Windgeschwindigkeit
+## Tests
 
-### 📅 Kalender-Widget
-
-- Monatsansicht
-- Datum auswählen
-- Event-Verwaltung (geplant)
-
-### ⏱️ Pomodoro-Widget
-
-- Fokus- und Pausen-Timer
-- Anpassbare Dauern
-- Automatischer Wechsel
-- Pomodoro-Zähler
-- Browser-Benachrichtigungen
-
-## Einstellungen
-
-In den Einstellungen kannst du:
-
-- Dark/Light Mode umschalten
-- Widgets aktivieren/deaktivieren
-- Layout zurücksetzen
-- Alle Daten löschen
-
-## Datenspeicherung
-
-Alle Daten werden lokal im Browser gespeichert (localStorage):
-
-- `mindpanel_widgets` - Widget-Konfiguration
-- `mindpanel_todos` - Aufgaben
-- `mindpanel_notes` - Notizen
-- `mindpanel_darkmode` - Theme-Einstellung
-- `mindpanel_pomodoro_settings` - Pomodoro-Einstellungen
-- `mindpanel_weather_city` - Letzte gewählte Stadt
-
-## Widget-System
-
-Das Widget-System ist bewusst einfach gehalten:
-
-- Widgets werden als Array gespeichert
-- Reihenfolge bestimmt die Anzeige
-- Drag & Drop ändert die Array-Reihenfolge
-- Keine komplexen x/y/w/h Koordinaten
-- Responsives CSS Grid Layout
-
-## Zukünftige Features
-
-- Cloud-Sync über Backend
-- Erweiterte Kalender-Funktionen
-- Habit Tracker
-- Analytics Dashboard
-- Custom Widgets
-- Export/Import
-
-## Lizenz
-
-MIT
-
-## Entwickelt mit ❤️
-
-Viel Spaß mit MindPanel!
+```bash
+cd api
+./gradlew test
+```
