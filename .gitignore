@@ -18,3 +18,7 @@ ui/dist/
 
 # Logs
 *.log
+
+# Docs
+api/docs/
+ui/docs/
