@@ -1,0 +1,24 @@
+# Dependencies
+ui/node_modules/
+api/build/
+api/.gradle/
+
+# Build output
+ui/dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.DS_Store
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Docs
+api/docs/
+ui/docs/
